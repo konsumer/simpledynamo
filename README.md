@@ -1,5 +1,7 @@
 # simple dynamo
 
+[![npm version](https://badge.fury.io/js/%40konsumer%2Fsimpledynamo.svg)](https://badge.fury.io/js/%40konsumer%2Fsimpledynamo)
+
 This is meant to simplify dynamodb access.
 
 It wraps the [document client](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/dynamodb-example-document-client.html) in promises, and has a helper if you are using cloudformation to track build/destroy of your dynamo resources.
