@@ -1,0 +1,20 @@
+{
+  "name": "simpledynamo",
+  "version": "0.0.0",
+  "description": "This is meant to simplify dynamodb access.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/konsumer/simpledynamo.git"
+  },
+  "keywords": [],
+  "author": "David Konsumer <konsumer@jetboystudio.com> (http://konsumer.js.org)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/konsumer/simpledynamo/issues"
+  },
+  "homepage": "https://github.com/konsumer/simpledynamo#readme",
+  "dependencies": {
+    "aws-sdk": "^2.720.0"
+  }
+}
