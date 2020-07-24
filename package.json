@@ -1,5 +1,5 @@
 {
-  "name": "simpledynamo",
+  "name": "@konsumer/simpledynamo",
   "version": "0.0.1",
   "description": "This is meant to simplify dynamodb access.",
   "main": "index.js",

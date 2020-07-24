@@ -11,14 +11,14 @@ It's a thin wrapper, but it's boilerplate I kept having to write, so this should
 Install in your project:
 
 ```sh
-npm i simpledynamo
+npm i @konsumer/simpledynamo
 ```
 
 ## usage
 
 ### config & provisioning
 
-The easiest way to use it is with cloudformation.
+It is assumed you are using cloudformation to provision.
 
 Setup a `cloudformation.yml` description of your databases. Here is an example with `id` and `expires` PK/SK, and `expires` is set as the TTL field (so it will automatically delete records that are expired.) Read more about setting up tables, [here](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html). Another common thing I setup a lot here are `GlobalSecondaryIndexes`.
 
@@ -69,12 +69,14 @@ AWS.config.update({
 })
 ```
 
+But it's much simpler to use env-vars or standard config.
+
 ### code
 
 After it's setup, it pretty simple to use:
 
 ```js
-const simpledynamo = require('simpledynamo')
+const simpledynamo = require('@konsumer/simpledynamo')
 
 // do any other config you need to, like above, but defaults should be fine, if everything is setup right.
 
@@ -90,7 +92,7 @@ async function main() {
 main()
 ```
 
-### Functions
+#### API
 
 <dl>
 <dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#batchGet-property">batchGet()</a> ⇒</dt>
