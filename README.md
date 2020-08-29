@@ -20,7 +20,7 @@ npm i @konsumer/simpledynamo
 
 ### config & provisioning
 
-It is assumed you are using cloudformation to provision.
+Cloudformation is a nice way to provision your resources, and there is a helper function `fromCloudFormation(table, stack)` to set the table-name.
 
 Setup a `cloudformation.yml` description of your databases. Here is an example with `id` and `expires` PK/SK, and `expires` is set as the TTL field (so it will automatically delete records that are expired.) Read more about setting up tables, [here](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html). Another common thing I setup a lot here are `GlobalSecondaryIndexes`.
 
@@ -35,22 +35,15 @@ Resources:
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: "S"
-        - AttributeName: expires
-          AttributeType: "N"
-      TimeToLiveSpecification:
-        AttributeName: expires
-        Enabled: true
       KeySchema:
         - AttributeName: id
           KeyType: HASH
-        - AttributeName: expires
-          KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
 ```
 
-Now you can add these `scripts` to you package.json:
+Now you can add these `scripts` to your package.json:
 
 ```json
 {
@@ -71,21 +64,23 @@ AWS.config.update({
 })
 ```
 
-But it's much simpler to use env-vars or standard config.
+But it's much simpler to use env-vars or standard config, and not configure it at all.
 
 ### code
 
 After it's setup, it pretty simple to use:
 
 ```js
-const simpledynamo = require('@konsumer/simpledynamo')
+const SimpleDynamo = require('@konsumer/simpledynamo')
 
 // do any other config you need to, like above, but defaults should be fine, if everything is setup right.
 
 // use in async functions for nice simple API
 async function main() {
+  const stuff = new SimpleDynamo()
+
   // names come from above cloudformation examples: table, stack
-  const stuff = await simpledynamo('MyStuff', 'dev')
+  await stuff.fromCloudFormation('MyStuff', 'dev')
 
   // scans are bad mmk?
   const things = await stuff.scan()
@@ -94,40 +89,17 @@ async function main() {
 main()
 ```
 
-#### API
+There are some additional helpers and improvements to [document client](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/dynamodb-example-document-client.html) , like update is object-based, and everything returns a reasonable record of the change you made:
 
-<dl>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#batchGet-property">batchGet()</a> ⇒</dt>
-<dd><p>Returns the attributes of one or more items from one or more tables by delegating to AWS.DynamoDB.batchGetItem().</p>
-</dd>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#batchWrite-property">batchWrite()</a> ⇒</dt>
-<dd><p>Puts or deletes multiple items in one or more tables by delegating to AWS.DynamoDB.batchWriteItem().</p>
-</dd>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#createSet-property">createSet()</a> ⇒</dt>
-<dd><p>Creates a set of elements inferring the type of set from the type of the first element.</p>
-</dd>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#delete-property">delete()</a> ⇒</dt>
-<dd><p>Deletes a single item in a table by primary key by delegating to AWS.DynamoDB.deleteItem().</p>
-</dd>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#get-property">get()</a> ⇒</dt>
-<dd><p>Returns a set of attributes for the item with the given primary key by delegating to AWS.DynamoDB.getItem().</p>
-</dd>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property">put()</a> ⇒</dt>
-<dd><p>Creates a new item, or replaces an old item with a new item by delegating to AWS.DynamoDB.putItem().</p>
-</dd>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#query-property">query()</a> ⇒</dt>
-<dd><p>Directly access items from a table by primary key or a secondary index.</p>
-</dd>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#scan-property">scan()</a> ⇒</dt>
-<dd><p>Returns one or more items and item attributes by accessing every item in a table or a secondary index.</p>
-</dd>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#transactGet-property">transactGet()</a> ⇒</dt>
-<dd><p>Atomically retrieves multiple items from one or more tables (but not from indexes) in a single account and region.</p>
-</dd>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#transactWrite-property">transactWrite()</a> ⇒</dt>
-<dd><p>Synchronous write operation that groups up to 10 action requests.</p>
-</dd>
-<dt><a href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#update-property">update()</a> ⇒</dt>
-<dd><p>Edits an existing item&#39;s attributes, or adds a new item to the table if it does not already exist by delegating to AWS.DynamoDB.updateItem().</p>
-</dd>
-</dl>
+```js
+const updatedItem = await things.update({
+  id: 'eWRhpRV' // REQUIRED: it uses this to find the record
+  name: "Cool Guy"
+})
+```
+
+
+### TODO
+
+* make keys work more dynamically
+* auto-generate `query` more like update

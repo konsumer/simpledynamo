@@ -2,7 +2,6 @@
   "name": "@konsumer/simpledynamo",
   "version": "0.0.1",
   "description": "This is meant to simplify dynamodb access.",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/konsumer/simpledynamo.git"
@@ -15,6 +14,25 @@
   },
   "homepage": "https://github.com/konsumer/simpledynamo#readme",
   "dependencies": {
-    "aws-sdk": "^2.720.0"
-  }
+    "aws-sdk": "^2.720.0",
+    "shortid": "^2.2.15"
+  },
+  "devDependencies": {
+    "baretest": "^2.0.0",
+    "esm": "^3.2.25",
+    "microbundle": "^0.12.3"
+  },
+  "scripts": {
+    "test": "./src/test.sh",
+    "build": "microbundle"
+  },
+  "source": "src/index.js",
+  "main": "dist/simpledynamo.js",
+  "module": "dist/simpledynamo.module.js",
+  "unpkg": "dist/simpledynamo.umd.js",
+  "files": [
+    "dist/simpledynamo.js",
+    "dist/simpledynamo.module.js",
+    "dist/simpledynamo.umd.js"
+  ]
 }
