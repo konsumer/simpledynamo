@@ -22,7 +22,7 @@ npm i @konsumer/simpledynamo
 
 Cloudformation is a nice way to provision your resources, and there is a helper function `fromCloudFormation(table, stack)` to set the table-name.
 
-Setup a `cloudformation.yml` description of your databases. Here is an example with `id` and `expires` PK/SK, and `expires` is set as the TTL field (so it will automatically delete records that are expired.) Read more about setting up tables, [here](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html). Another common thing I setup a lot here are `GlobalSecondaryIndexes`.
+Setup a `cloudformation.yml` description of your databases. Here is an example with `id` PK, [here](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html) is more info. Another common thing I setup a lot here are `GlobalSecondaryIndexes`.
 
 ```yml
 AWSTemplateFormatVersion: 2010-09-09
