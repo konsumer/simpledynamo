@@ -5,6 +5,11 @@ Resources:
     Type: 'AWS::DynamoDB::Table'
     DeletionPolicy: Delete
     Properties:
+      TableName:
+        Fn::Join:
+          - '-'
+          - - Ref: AWS::StackName
+            - mystuff
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: "S"
