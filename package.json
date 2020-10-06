@@ -1,6 +1,6 @@
 {
   "name": "@konsumer/simpledynamo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is meant to simplify dynamodb access.",
   "repository": {
     "type": "git",
