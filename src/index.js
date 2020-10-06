@@ -55,7 +55,7 @@ export default class SimpleDynamo {
 
   // save a new record, see [AWS.DynamoDB.DocumentClient].put
   put(Item, options) {
-    Item.id = shortid()
+    Item.id = Item.id || shortid()
     return this.db.put({
       ReturnValues: 'ALL_OLD',
       ...this.params,

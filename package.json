@@ -14,13 +14,13 @@
   },
   "homepage": "https://github.com/konsumer/simpledynamo#readme",
   "dependencies": {
-    "aws-sdk": "^2.720.0",
+    "aws-sdk": "^2.767.0",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
     "baretest": "^2.0.0",
     "esm": "^3.2.25",
-    "microbundle": "^0.12.3"
+    "microbundle": "^0.12.4"
   },
   "scripts": {
     "test": "./src/test.sh",
