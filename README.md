@@ -103,3 +103,4 @@ const updatedItem = await things.update({
 
 * make keys work more dynamically
 * auto-generate `query` more like update
+* return `LastEvaluatedKey` in scan, so it can be looped over (for full scan)
