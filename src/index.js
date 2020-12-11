@@ -5,13 +5,13 @@ import { generate as shortid } from 'shortid'
 // assumes all records have id field
 // and always returns promises
 export default class SimpleDynamo {
-  constructor(TableName) {
+  constructor (TableName) {
     this.params = { TableName }
     this.db = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' })
   }
 
   // use info in cloudformation to figure out table-name
-  fromCloudFormation(table, stack) {
+  fromCloudFormation (table, stack) {
     return new Promise((resolve, reject) => {
       const cloudformation = new AWS.CloudFormation()
       cloudformation.listStackResources({ StackName: stack }, (err, data) => {
@@ -25,23 +25,45 @@ export default class SimpleDynamo {
   }
 
   // get all records (with optional filter) see [AWS.DynamoDB.DocumentClient].scan
-  scan(options) {
-    return this.db.scan({
+  async scan (options) {
+    const o = {
       ...this.params,
       ...options
-    }).promise().then(r => r.Items)
+    }
+    delete o.all
+    const r = await this.db.scan(o).promise()
+    if (!options.all) {
+      return r.Items
+    } else {
+      if (r.LastEvaluatedKey) {
+        return [...r.Items, ...(await this.scan({ ...options, ExclusiveStartKey: r.LastEvaluatedKey }))]
+      } else {
+        return r.Items
+      }
+    }
   }
 
   // query (with optional keys) see [AWS.DynamoDB.DocumentClient].query
-  query(options) {
-    return this.db.query({
+  async query (options) {
+    const o = {
       ...this.params,
       ...options
-    }).promise().then(r => r.Items)
+    }
+    delete o.all
+    const r = await this.db.query(o).promise()
+    if (!options.all) {
+      return r.Items
+    } else {
+      if (r.LastEvaluatedKey) {
+        return [...r.Items, ...(await this.query({ ...options, ExclusiveStartKey: r.LastEvaluatedKey }))]
+      } else {
+        return r.Items
+      }
+    }
   }
 
   // get a single record by id, see [AWS.DynamoDB.DocumentClient].get
-  async get(id, options) {
+  async get (id, options) {
     const { Item } = await this.db.get({
       ...this.params,
       Key: { id },
@@ -54,7 +76,7 @@ export default class SimpleDynamo {
   }
 
   // save a new record, see [AWS.DynamoDB.DocumentClient].put
-  put(Item, options) {
+  put (Item, options) {
     Item.id = Item.id || shortid()
     return this.db.put({
       ReturnValues: 'ALL_OLD',
@@ -65,7 +87,7 @@ export default class SimpleDynamo {
   }
 
   // update a record, see [AWS.DynamoDB.DocumentClient].update
-  update(updates, options) {
+  update (updates, options) {
     const { id, ...newUpdates } = updates
     return this.db.update({
       ReturnValues: 'ALL_NEW',
@@ -77,7 +99,7 @@ export default class SimpleDynamo {
   }
 
   // delete a record, see [AWS.DynamoDB.DocumentClient].delete
-  delete(id, options) {
+  delete (id, options) {
     return this.db.delete({
       ReturnValues: 'ALL_OLD',
       ...this.params,

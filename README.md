@@ -99,6 +99,13 @@ const updatedItem = await things.update({
 ```
 
 
+For `query` and `scan` you can add `all` to the params, to have it loop over the returned pages:
+
+```js
+const allTheThings = await things.scan({ all: true })
+```
+
+
 ### TODO
 
 * make keys work more dynamically
