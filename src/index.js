@@ -25,7 +25,7 @@ export default class SimpleDynamo {
   }
 
   // get all records (with optional filter) see [AWS.DynamoDB.DocumentClient].scan
-  async scan (options) {
+  async scan (options = {}) {
     const o = {
       ...this.params,
       ...options
@@ -44,7 +44,7 @@ export default class SimpleDynamo {
   }
 
   // query (with optional keys) see [AWS.DynamoDB.DocumentClient].query
-  async query (options) {
+  async query (options = {}) {
     const o = {
       ...this.params,
       ...options
